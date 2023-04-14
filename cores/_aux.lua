@@ -2,10 +2,14 @@
 -- Copyright (c) 2016 tacigar. All rights reserved.
 -- https://github.com/tacigar/maidroid
 ------------------------------------------------------------
+-- Copyright (c) 2023 IceDragon.
+-- https://github.com/IceDragon200/hsw_maidroid
+------------------------------------------------------------
+local mod = assert(hsw_maidroid)
 
-maidroid_core._aux = {}
+mod._aux = mod._aux or {}
 
-function maidroid_core._aux.search_surrounding(pos, pred, searching_range)
+function mod._aux.search_surrounding(pos, pred, searching_range)
 	pos = vector.round(pos)
 	local max_xz = math.max(searching_range.x, searching_range.z)
 

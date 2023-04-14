@@ -5,14 +5,14 @@
 -- Copyright (c) 2023 IceDragon.
 -- https://github.com/IceDragon200/hsw_maidroid
 ------------------------------------------------------------
+
 local mod = assert(hsw_maidroid)
 
-mod.register_core(mod:make_name("core_empty"), {
-	description      = "maidroid core : empty",
-	inventory_image  = "maidroid_core_empty.png",
-	on_start         = function(self) end,
-	on_stop          = function(self) end,
-	on_resume        = function(self) end,
-	on_pause         = function(self) end,
-	on_step          = function(self, dtime) end,
-})
+mod:require("cores/_aux.lua")
+mod:require("cores/empty.lua")
+mod:require("cores/basic.lua")
+mod:require("cores/farming.lua")
+mod:require("cores/torcher.lua")
+if minetest.global_exists("pdisc") then
+  dofile(maidroid_core.modpath .. "/cores/ocr.lua")
+end

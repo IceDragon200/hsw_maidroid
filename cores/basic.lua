@@ -2,6 +2,10 @@
 -- Copyright (c) 2016 tacigar. All rights reserved.
 -- https://github.com/tacigar/maidroid
 ------------------------------------------------------------
+-- Copyright (c) 2023 IceDragon.
+-- https://github.com/IceDragon200/hsw_maidroid
+------------------------------------------------------------
+local mod = assert(hsw_maidroid)
 
 local state = {IDLE = 0, ACCOMPANY = 1}
 
@@ -55,7 +59,7 @@ local function on_step(self, dtime)
 end
 
 -- register a definition of a new core.
-maidroid.register_core("maidroid_core:basic", {
+mod.register_core(mod:make_name("core_basic"), {
 	description      = "maidroid core : basic",
 	inventory_image  = "maidroid_core_basic.png",
 	on_start         = on_start,

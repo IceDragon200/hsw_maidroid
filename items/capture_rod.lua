@@ -1,6 +1,15 @@
+------------------------------------------------------------
+-- Copyright (c) 2016 tacigar. All rights reserved.
+-- https://github.com/tacigar/maidroid
+------------------------------------------------------------
+-- Copyright (c) 2023 IceDragon.
+-- https://github.com/IceDragon200/hsw_maidroid
+------------------------------------------------------------
+local mod = assert(hsw_maidroid)
+
 local rod_uses = 100
 
-minetest.register_tool("maidroid_tool:capture_rod", {
+mod:register_tool("capture_rod", {
 	description = "maidroid tool : capture rod",
 	inventory_image = "maidroid_tool_capture_rod.png",
 	on_use = function(itemstack, user, pointed_thing)
@@ -10,7 +19,7 @@ minetest.register_tool("maidroid_tool:capture_rod", {
 
 		local obj = pointed_thing.ref
 		local luaentity = obj:get_luaentity()
-		if not maidroid.is_maidroid(luaentity.name) then
+		if not mod.is_maidroid(luaentity.name) then
 			if luaentity.name == "__builtin:item" then
 				luaentity:on_punch(user)
 			end
@@ -19,7 +28,7 @@ minetest.register_tool("maidroid_tool:capture_rod", {
 
 		local drop_pos = vector.add(obj:getpos(), {x = 0, y = 1, z = 0})
 		local maidroid_name = string.split(luaentity.name, ":")[2]
-		local stack = ItemStack("maidroid_tool:captured_" .. maidroid_name .. "_egg")
+		local stack = ItemStack(mod:make_name("captured_" .. maidroid_name .. "_egg"))
 		stack:set_metadata(luaentity:get_staticdata())
 
 		obj:remove()
@@ -51,12 +60,12 @@ minetest.register_tool("maidroid_tool:capture_rod", {
 })
 
 
-for name, _ in pairs(maidroid.registered_maidroids) do
+for name, _ in pairs(mod.registered_maidroids) do
 	local maidroid_name = string.split(name, ":")[2]
 	local egg_def = maidroid.registered_eggs[name .. "_egg"]
 	local inv_img = "maidroid_tool_capture_rod_plate.png^" .. egg_def.inventory_image
 
-	minetest.register_tool("maidroid_tool:captured_" .. maidroid_name .. "_egg", {
+	mod:register_tool("captured_" .. maidroid_name .. "_egg", {
 		description = "maidroid tool : captured " .. egg_def.description,
 		inventory_image = inv_img,
 		groups = {not_in_creative_inventory = 1},
@@ -78,7 +87,7 @@ for name, _ in pairs(maidroid.registered_maidroids) do
 			luaentity:on_activate(meta)
 
 			-- FIXME: this is workaround
-			maidroid.manufacturing_data[name] = maidroid.manufacturing_data[name] - 1
+			mod.manufacturing_data[name] = mod.manufacturing_data[name] - 1
 
 			local pos = vector.add(obj:getpos(), {x = 0, y = -0.2, z = 0})
 			minetest.sound_play("maidroid_tool_capture_rod_open_egg", {pos = pos})

@@ -2,10 +2,14 @@
 -- Copyright (c) 2016 tacigar. All rights reserved.
 -- https://github.com/tacigar/maidroid
 ------------------------------------------------------------
+-- Copyright (c) 2023 IceDragon.
+-- https://github.com/IceDragon200/hsw_maidroid
+------------------------------------------------------------
+local mod = assert(hsw_maidroid)
 
 -- maidroid.animation_frames represents the animation frame data
 -- of "models/maidroid.b3d".
-maidroid.animation_frames = {
+mod.animation_frames = {
 	STAND     = {x =   1, y =  78},
 	SIT       = {x =  81, y = 160},
 	LAY       = {x = 162, y = 165},
@@ -16,27 +20,27 @@ maidroid.animation_frames = {
 
 -- maidroid.registered_maidroids represents a table that contains
 -- definitions of maidroid registered by maidroid.register_maidroid.
-maidroid.registered_maidroids = {}
+mod.registered_maidroids = {}
 
 -- maidroid.registered_cores represents a table that contains
 -- definitions of core registered by maidroid.register_core.
-maidroid.registered_cores = {}
+mod.registered_cores = {}
 
 -- maidroid.registered_eggs represents a table that contains
 -- definition of egg registered by maidroid.register_egg.
-maidroid.registered_eggs = {}
+mod.registered_eggs = {}
 
 -- maidroid.is_core reports whether a item is a core item by the name.
-function maidroid.is_core(item_name)
-	if maidroid.registered_cores[item_name] then
+function mod.is_core(item_name)
+	if mod.registered_cores[item_name] then
 		return true
 	end
 	return false
 end
 
 -- maidroid.is_maidroid reports whether a name is maidroid's name.
-function maidroid.is_maidroid(name)
-	if maidroid.registered_maidroids[name] then
+function mod.is_maidroid(name)
+	if mod.registered_maidroids[name] then
 		return true
 	end
 	return false
@@ -49,10 +53,10 @@ end
 -- this table must be contains by a metatable.__index of maidroid self tables.
 -- minetest.register_entity set initial properties as a metatable.__index, so
 -- this table's methods must be put there.
-maidroid.maidroid = {}
+mod.maidroid = {}
 
 -- maidroid.maidroid.get_inventory returns a inventory of a maidroid.
-function maidroid.maidroid.get_inventory(self)
+function mod.maidroid.get_inventory(self)
 	return minetest.get_inventory {
 		type = "detached",
 		name = self.inventory_name,
@@ -60,13 +64,13 @@ function maidroid.maidroid.get_inventory(self)
 end
 
 -- maidroid.maidroid.get_core_name returns a name of a maidroid's current core.
-function maidroid.maidroid.get_core_name(self)
+function mod.maidroid.get_core_name(self)
 	local inv = self:get_inventory()
 	return inv:get_stack("core", 1):get_name()
 end
 
 -- maidroid.maidroid.get_core returns a maidroid's current core definition.
-function maidroid.maidroid.get_core(self)
+function mod.maidroid.get_core(self)
 	local name = self:get_core_name()
 	if name ~= "" then
 		return maidroid.registered_cores[name]
@@ -76,7 +80,7 @@ end
 
 -- maidroid.maidroid.get_nearest_player returns a player object who
 -- is the nearest to the maidroid.
-function maidroid.maidroid.get_nearest_player(self, range_distance)
+function mod.maidroid.get_nearest_player(self, range_distance)
 	local player, min_distance = nil, range_distance
 	local position = self.object:getpos()
 
@@ -96,7 +100,7 @@ function maidroid.maidroid.get_nearest_player(self, range_distance)
 end
 
 -- maidroid.maidroid.get_front returns a position in front of the maidroid.
-function maidroid.maidroid.get_front(self)
+function mod.maidroid.get_front(self)
 	local direction = self:get_look_direction()
 	if math.abs(direction.x) >= 0.5 then
 		if direction.x > 0 then	direction.x = 1	else direction.x = -1 end
@@ -114,52 +118,52 @@ function maidroid.maidroid.get_front(self)
 end
 
 -- maidroid.maidroid.get_front_node returns a node that exists in front of the maidroid.
-function maidroid.maidroid.get_front_node(self)
+function mod.maidroid.get_front_node(self)
 	local front = self:get_front()
 	return minetest.get_node(front)
 end
 
 -- maidroid.maidroid.get_look_direction returns a normalized vector that is
 -- the maidroid's looking direction.
-function maidroid.maidroid.get_look_direction(self)
+function mod.maidroid.get_look_direction(self)
 	local yaw = self.object:getyaw()
 	return vector.normalize{x = -math.sin(yaw), y = 0.0, z = math.cos(yaw)}
 end
 
 -- maidroid.maidroid.set_animation sets the maidroid's animation.
 -- this method is wrapper for self.object:set_animation.
-function maidroid.maidroid.set_animation(self, frame)
+function mod.maidroid.set_animation(self, frame)
 	self.object:set_animation(frame, 15, 0)
 end
 
 -- maidroid.maidroid.set_yaw_by_direction sets the maidroid's yaw
 -- by a direction vector.
-function maidroid.maidroid.set_yaw_by_direction(self, direction)
+function mod.maidroid.set_yaw_by_direction(self, direction)
 	self.object:setyaw(math.atan2(direction.z, direction.x) - math.pi / 2)
 end
 
 -- maidroid.maidroid.get_wield_item_stack returns the maidroid's wield item's stack.
-function maidroid.maidroid.get_wield_item_stack(self)
+function mod.maidroid.get_wield_item_stack(self)
 	local inv = self:get_inventory()
 	return inv:get_stack("wield_item", 1)
 end
 
 -- maidroid.maidroid.set_wield_item_stack sets maidroid's wield item stack.
-function maidroid.maidroid.set_wield_item_stack(self, stack)
+function mod.maidroid.set_wield_item_stack(self, stack)
 	local inv = self:get_inventory()
 	inv:set_stack("wield_item", 1, stack)
 end
 
 -- maidroid.maidroid.add_item_to_main add item to main slot.
 -- and returns leftover.
-function maidroid.maidroid.add_item_to_main(self, stack)
+function mod.maidroid.add_item_to_main(self, stack)
 	local inv = self:get_inventory()
 	return inv:add_item("main", stack)
 end
 
 -- maidroid.maidroid.move_main_to_wield moves itemstack from main to wield.
 -- if this function fails then returns false, else returns true.
-function maidroid.maidroid.move_main_to_wield(self, pred)
+function mod.maidroid.move_main_to_wield(self, pred)
 	local inv = self:get_inventory()
 	local main_size = inv:get_size("main")
 
@@ -176,12 +180,12 @@ function maidroid.maidroid.move_main_to_wield(self, pred)
 end
 
 -- maidroid.maidroid.is_named reports the maidroid is still named.
-function maidroid.maidroid.is_named(self)
+function mod.maidroid.is_named(self)
 	return self.nametag ~= ""
 end
 
 -- maidroid.maidroid.has_item_in_main reports whether the maidroid has item.
-function maidroid.maidroid.has_item_in_main(self, pred)
+function mod.maidroid.has_item_in_main(self, pred)
 	local inv = self:get_inventory()
 	local stacks = inv:get_list("main")
 
@@ -194,7 +198,7 @@ function maidroid.maidroid.has_item_in_main(self, pred)
 end
 
 -- maidroid.maidroid.change_direction change direction to destination and velocity vector.
-function maidroid.maidroid.change_direction(self, destination)
+function mod.maidroid.change_direction(self, destination)
   local position = self.object:getpos()
   local direction = vector.subtract(destination, position)
 	direction.y = 0
@@ -205,7 +209,7 @@ function maidroid.maidroid.change_direction(self, destination)
 end
 
 -- maidroid.maidroid.change_direction_randomly change direction randonly.
-function maidroid.maidroid.change_direction_randomly(self)
+function mod.maidroid.change_direction_randomly(self)
 	local direction = {
 		x = math.random(0, 5) * 2 - 5,
 		y = 0,
@@ -217,7 +221,7 @@ function maidroid.maidroid.change_direction_randomly(self)
 end
 
 -- maidroid.maidroid.update_infotext updates the infotext of the maidroid.
-function maidroid.maidroid.update_infotext(self)
+function mod.maidroid.update_infotext(self)
 	local infotext = ""
 	local core_name = self:get_core_name()
 
@@ -240,12 +244,12 @@ end
 -- maidroid.manufacturing_data represents a table that contains manufacturing data.
 -- this table's keys are product names, and values are manufacturing numbers
 -- that has been already manufactured.
-maidroid.manufacturing_data = (function()
+mod.manufacturing_data = (function()
 	local file_name = minetest.get_worldpath() .. "/manufacturing_data"
 
 	minetest.register_on_shutdown(function()
 		local file = io.open(file_name, "w")
-		file:write(minetest.serialize(maidroid.manufacturing_data))
+		file:write(minetest.serialize(mod.manufacturing_data))
 		file:close()
 	end)
 
@@ -263,12 +267,16 @@ end) ()
 -- register empty item entity definition.
 -- this entity may be hold by maidroid's hands.
 do
-	minetest.register_craftitem("maidroid:dummy_empty_craftitem", {
+	mod:register_craftitem("dummy_empty_craftitem", {
 		wield_image = "maidroid_dummy_empty_craftitem.png",
 	})
 
 	local function on_activate(self, staticdata)
-		self.object:set_properties{textures={"maidroid:dummy_empty_craftitem"}}
+		self.object:set_properties{
+			textures = {
+				mod:make_name("dummy_empty_craftitem")
+			}
+		}
 	end
 
 	local function on_step(self, dtime)
@@ -280,10 +288,18 @@ do
 				if stack:get_name() ~= self.itemname then
 					if stack:is_empty() then
 						self.itemname = ""
-						self.object:set_properties{textures={"maidroid:dummy_empty_craftitem"}}
+						self.object:set_properties{
+							textures = {
+								mod:make_name("dummy_empty_craftitem"),
+							}
+						}
 					else
 						self.itemname = stack:get_name()
-						self.object:set_properties{textures={self.itemname}}
+						self.object:set_properties{
+							textures = {
+								self.itemname
+							}
+						}
 					end
 				end
 				return
@@ -295,7 +311,7 @@ do
 		return
 	end
 
-	minetest.register_entity("maidroid:dummy_item", {
+	minetest.register_entity(mod:make_name("dummy_item"), {
 		hp_max		     = 1,
 		visual		     = "wielditem",
 		visual_size	   = {x = 0.025, y = 0.025},
@@ -312,8 +328,8 @@ end
 ---------------------------------------------------------------------
 
 -- maidroid.register_core registers a definition of a new core.
-function maidroid.register_core(core_name, def)
-	maidroid.registered_cores[core_name] = def
+function mod.register_core(core_name, def)
+	mod.registered_cores[core_name] = def
 
 	minetest.register_tool(core_name, {
 		stack_max       = 1,
@@ -323,8 +339,9 @@ function maidroid.register_core(core_name, def)
 end
 
 -- maidroid.register_egg registers a definition of a new egg.
-function maidroid.register_egg(egg_name, def)
-	maidroid.registered_eggs[egg_name] = def
+function mod.register_egg(egg_name, def)
+	assert(type(egg_name) == "string", "expected an egg name to be a string")
+	mod.registered_eggs[egg_name] = def
 
 	minetest.register_tool(egg_name, {
 		description     = def.description,
@@ -350,12 +367,12 @@ function maidroid.register_egg(egg_name, def)
 end
 
 -- maidroid.register_maidroid registers a definition of a new maidroid.
-function maidroid.register_maidroid(product_name, def)
-	maidroid.registered_maidroids[product_name] = def
+function mod.register_maidroid(product_name, def)
+	mod.registered_maidroids[product_name] = def
 
 	-- initialize manufacturing number of a new maidroid.
-	if maidroid.manufacturing_data[product_name] == nil then
-		maidroid.manufacturing_data[product_name] = 0
+	if mod.manufacturing_data[product_name] == nil then
+		mod.manufacturing_data[product_name] = 0
 	end
 
 	-- create_inventory creates a new inventory, and returns it.
@@ -365,7 +382,7 @@ function maidroid.register_maidroid(product_name, def)
 			on_put = function(inv, listname, index, stack, player)
 				if listname == "core" then
 					local core_name = stack:get_name()
-					local core = maidroid.registered_cores[core_name]
+					local core = mod.registered_cores[core_name]
 					core.on_start(self)
 
 					self:update_infotext()
@@ -376,7 +393,7 @@ function maidroid.register_maidroid(product_name, def)
 				-- only cores can put to a core inventory.
 				if listname == "main" then
 					return stack:get_count()
-				elseif listname == "core" and maidroid.is_core(stack:get_name()) then
+				elseif listname == "core" and mod.is_core(stack:get_name()) then
 					return stack:get_count()
 				elseif listname == "wield_item" then
 					return 0
@@ -387,7 +404,7 @@ function maidroid.register_maidroid(product_name, def)
 			on_take = function(inv, listname, index, stack, player)
 				if listname == "core" then
 					local core_name = stack:get_name()
-					local core = maidroid.registered_cores[core_name]
+					local core = mod.registered_cores[core_name]
 					core.on_stop(self)
 
 					self:update_infotext()
@@ -404,7 +421,7 @@ function maidroid.register_maidroid(product_name, def)
 			on_move = function(inv, from_list, from_index, to_list, to_index, count, player)
 				if to_list == "core" or from_list == "core" then
 					local core_name = inv:get_stack(to_list, to_index):get_name()
-					local core = maidroid.registered_cores[core_name]
+					local core = mod.registered_cores[core_name]
 
 					if to_list == "core" then
 						core.on_start(self)
@@ -423,7 +440,7 @@ function maidroid.register_maidroid(product_name, def)
 
 				if to_list == "main" then
 					return count
-				elseif to_list == "core" and maidroid.is_core(inv:get_stack(from_list, from_index):get_name()) then
+				elseif to_list == "core" and mod.is_core(inv:get_stack(from_list, from_index):get_name()) then
 					return count
 				end
 
@@ -457,8 +474,8 @@ function maidroid.register_maidroid(product_name, def)
 	local function on_activate(self, staticdata)
 		-- parse the staticdata, and compose a inventory.
 		if staticdata == "" then
-			self.manufacturing_number = maidroid.manufacturing_data[product_name]
-			maidroid.manufacturing_data[product_name] = maidroid.manufacturing_data[product_name] + 1
+			self.manufacturing_number = mod.manufacturing_data[product_name]
+			mod.manufacturing_data[product_name] = mod.manufacturing_data[product_name] + 1
 			create_inventory(self)
 
 		else
@@ -482,7 +499,10 @@ function maidroid.register_maidroid(product_name, def)
 		}
 
 		-- attach dummy item to new maidroid.
-		local dummy_item = minetest.add_entity(self.object:getpos(), "maidroid:dummy_item")
+		local dummy_item = minetest.add_entity(
+			self.object:getpos(),
+			mod:make_name("dummy_item")
+		)
 		dummy_item:set_attach(self.object, "Arm_R", {x = 0.065, y = 0.50, z = -0.15}, {x = -45, y = 0, z = 0})
 		dummy_item:get_luaentity().maidroid_object = self.object
 
@@ -614,28 +634,28 @@ function maidroid.register_maidroid(product_name, def)
 		get_staticdata               = get_staticdata,
 
 		-- extra methods.
-		get_inventory                = maidroid.maidroid.get_inventory,
-		get_core                     = maidroid.maidroid.get_core,
-		get_core_name                = maidroid.maidroid.get_core_name,
-		get_nearest_player           = maidroid.maidroid.get_nearest_player,
-		get_front                    = maidroid.maidroid.get_front,
-		get_front_node               = maidroid.maidroid.get_front_node,
-		get_look_direction           = maidroid.maidroid.get_look_direction,
-		set_animation                = maidroid.maidroid.set_animation,
-		set_yaw_by_direction         = maidroid.maidroid.set_yaw_by_direction,
-		get_wield_item_stack         = maidroid.maidroid.get_wield_item_stack,
-		set_wield_item_stack         = maidroid.maidroid.set_wield_item_stack,
-		add_item_to_main             = maidroid.maidroid.add_item_to_main,
-		move_main_to_wield           = maidroid.maidroid.move_main_to_wield,
-		is_named                     = maidroid.maidroid.is_named,
-		has_item_in_main             = maidroid.maidroid.has_item_in_main,
-		change_direction             = maidroid.maidroid.change_direction,
-		change_direction_randomly    = maidroid.maidroid.change_direction_randomly,
-		update_infotext              = maidroid.maidroid.update_infotext,
+		get_inventory                = mod.maidroid.get_inventory,
+		get_core                     = mod.maidroid.get_core,
+		get_core_name                = mod.maidroid.get_core_name,
+		get_nearest_player           = mod.maidroid.get_nearest_player,
+		get_front                    = mod.maidroid.get_front,
+		get_front_node               = mod.maidroid.get_front_node,
+		get_look_direction           = mod.maidroid.get_look_direction,
+		set_animation                = mod.maidroid.set_animation,
+		set_yaw_by_direction         = mod.maidroid.set_yaw_by_direction,
+		get_wield_item_stack         = mod.maidroid.get_wield_item_stack,
+		set_wield_item_stack         = mod.maidroid.set_wield_item_stack,
+		add_item_to_main             = mod.maidroid.add_item_to_main,
+		move_main_to_wield           = mod.maidroid.move_main_to_wield,
+		is_named                     = mod.maidroid.is_named,
+		has_item_in_main             = mod.maidroid.has_item_in_main,
+		change_direction             = mod.maidroid.change_direction,
+		change_direction_randomly    = mod.maidroid.change_direction_randomly,
+		update_infotext              = mod.maidroid.update_infotext,
 	})
 
 	-- register maidroid egg.
-	maidroid.register_egg(product_name .. "_egg", {
+	mod.register_egg(product_name .. "_egg", {
 		description     = product_name .. " egg",
 		inventory_image = def.egg_image,
 		product_name    = product_name,

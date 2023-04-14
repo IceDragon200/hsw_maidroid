@@ -2,17 +2,21 @@
 -- Copyright (c) 2016 tacigar. All rights reserved.
 -- https://github.com/tacigar/maidroid
 ------------------------------------------------------------
+-- Copyright (c) 2023 IceDragon.
+-- https://github.com/IceDragon200/hsw_maidroid
+------------------------------------------------------------
+local mod = assert(hsw_maidroid)
 
-maidroid.register_egg("maidroid:empty_egg", {
-	description     = "Empty Egg",
+mod.register_egg(mod:make_name("empty_egg"), {
+	description     = mod.S("Empty Egg"),
 	inventory_image = "maidroid_empty_egg.png",
 })
 
 for i = 1, 15 do
-	local product_name = "maidroid:maidroid_mk" .. tostring(i)
+	local product_name = mod:make_name("maidroid_mk" .. tostring(i))
 	local texture_name = "maidroid_maidroid_mk" .. tostring(i) .. ".png"
 	local egg_img_name = "maidroid_maidroid_mk" .. tostring(i) .. "_egg.png"
-	maidroid.register_maidroid(product_name, {
+	mod.register_maidroid(product_name, {
 		hp_max     = 10,
 		weight     = 20,
 		mesh       = "maidroid.b3d",

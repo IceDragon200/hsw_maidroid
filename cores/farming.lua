@@ -2,6 +2,10 @@
 -- Copyright (c) 2016 tacigar. All rights reserved.
 -- https://github.com/tacigar/maidroid
 ------------------------------------------------------------
+-- Copyright (c) 2023 IceDragon.
+-- https://github.com/IceDragon200/hsw_maidroid
+------------------------------------------------------------
+local mod = assert(hsw_maidroid)
 
 local state = {
 	WALK_RANDOMLY = 0,
@@ -16,7 +20,7 @@ local target_plants = {
 	"farming:wheat_8",
 }
 
-local _aux = maidroid_core._aux
+local _aux = mod._aux
 
 local FIND_PATH_TIME_INTERVAL = 20
 local CHANGE_DIRECTION_TIME_INTERVAL = 30
@@ -60,7 +64,7 @@ local function on_stop(self)
 	self.state = nil
 	self.time_counters = nil
 	self.path = nil
-	self:set_animation(maidroid.animation_frames.STAND)
+	self:set_animation(mod.animation_frames.STAND)
 end
 
 local function is_near(self, pos, distance)
@@ -130,7 +134,7 @@ to_walk_randomly = function(self)
 	self.time_counters[1] = 0
 	self.time_counters[2] = 0
 	self:change_direction_randomly()
-	self:set_animation(maidroid.animation_frames.WALK)
+	self:set_animation(mod.animation_frames.WALK)
 end
 
 to_walk_to_plant = function(self, path, destination)
@@ -140,7 +144,7 @@ to_walk_to_plant = function(self, path, destination)
 	self.time_counters[1] = 0 -- find path interval
 	self.time_counters[2] = 0
 	self:change_direction(self.path[1])
-	self:set_animation(maidroid.animation_frames.WALK)
+	self:set_animation(mod.animation_frames.WALK)
 end
 
 to_walk_to_mow = function(self, path, destination)
@@ -150,7 +154,7 @@ to_walk_to_mow = function(self, path, destination)
 	self.time_counters[1] = 0 -- find path interval
 	self.time_counters[2] = 0
 	self:change_direction(self.path[1])
-	self:set_animation(maidroid.animation_frames.WALK)
+	self:set_animation(mod.animation_frames.WALK)
 end
 
 to_plant = function(self)
@@ -160,7 +164,7 @@ to_plant = function(self)
 		self.state = state.PLANT
 		self.time_counters[1] = 0
 		self.object:setvelocity{x = 0, y = 0, z = 0}
-		self:set_animation(maidroid.animation_frames.MINE)
+		self:set_animation(mod.animation_frames.MINE)
 		self:set_yaw_by_direction(vector.subtract(self.destination, self.object:getpos()))
 		return
 	else
@@ -173,7 +177,7 @@ to_mow = function(self)
 	self.state = state.MOW
 	self.time_counters[1] = 0
 	self.object:setvelocity{x = 0, y = 0, z = 0}
-	self:set_animation(maidroid.animation_frames.MINE)
+	self:set_animation(mod.animation_frames.MINE)
 	self:set_yaw_by_direction(vector.subtract(self.destination, self.object:getpos()))
 end
 
@@ -290,7 +294,7 @@ local function on_step(self, dtime)
 	end
 end
 
-maidroid.register_core("maidroid_core:farming", {
+mod.register_core(mod:make_name("core_farming"), {
 	description      = "maidroid core : farming",
 	inventory_image  = "maidroid_core_farming.png",
 	on_start         = on_start,

@@ -47,3 +47,15 @@ minetest.register_craft{
 		{"default:bronze_ingot", "default:bronze_ingot", "default:bronze_ingot"},
 	},
 }
+
+
+-- only a recipe of the empty core is registered.
+-- other cores is created by writing on the empty core.
+minetest.register_craft{
+	output = "maidroid_core:empty",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot",    "default:obsidian", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+	},
+}
