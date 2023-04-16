@@ -15,14 +15,16 @@ if rawget(_G, "yatm_core") then
   yspec = assert(yatm.formspec)
 end
 
+local render_formspec
 if yspec then
-  local function render_formspec(player, assigns)
+  function render_formspec(player, assigns)
     local cio = fspec.calc_inventory_offset
 
-    return yspec.render_split_inv_panel(player, 4, 2, { bg = "default" }, function (loc, rect)
+    return yspec.render_split_inv_panel(player, 8, 1.25, { bg = "default" }, function (loc, rect)
       if loc == "main_body" then
-        return fspec.button_exit(rect.x + cio(3), rect.y, 1, 0, "apply_name", "Apply") ..
-          fspec.field(rect.x, rect.y, 3, 1, "name", "name", assigns.nametag)
+        return ""
+          .. fspec.field_area(rect.x, rect.y + 0.25, 6, 1, "name", "Name", assigns.nametag)
+          .. fspec.button_exit(rect.x + cio(6), rect.y + 0.25, 2, 1, "apply_name", "Apply")
       elseif loc == "footer" then
         return ""
       end
@@ -30,14 +32,14 @@ if yspec then
     end)
   end
 else
-  local function render_formspec(player, assigns)
+  function render_formspec(player, assigns)
     local formspec =
       fspec.size(4, 1.25)
       .. default.gui_bg
       .. default.gui_bg_img
       .. default.gui_slots
       .. fspec.button_exit(3, 0.25, 1, 0.875, "apply_name", "Apply")
-      .. fspec.field_area(0.5, 0.5, 2.75, 1, "name", "name", assigns.nametag)
+      .. fspec.field_area(0.5, 0.5, 2.75, 1, "name", "Name", assigns.nametag)
 
     return formspec
   end
@@ -70,7 +72,7 @@ mod:register_craftitem("nametag", {
   inventory_image  = "maidroid_tool_nametag.png",
   stack_max = 1,
 
-  on_use = function(itemstack, player, pointed_thing)
+  on_use = function(itemstack, user, pointed_thing)
     if pointed_thing.type ~= "object" then
       return nil
     end
@@ -87,7 +89,7 @@ mod:register_craftitem("nametag", {
         if ty == "boolean" then
           is_nameable = luaentity.is_nameable
         elseif ty == "function" then
-          is_nameable = luaentity:is_nameable(player, pointed_thing)
+          is_nameable = luaentity:is_nameable(user, pointed_thing)
         end
       else
         is_nameable = Groups.has_group(luaentity, "nameable")
