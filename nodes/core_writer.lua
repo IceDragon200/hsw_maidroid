@@ -55,7 +55,7 @@ do -- register core writer
     end
 
     if yspec then
-      return yspec.render_split_inv_panel(player, 3, 3, { bg = "default" }, function (loc, rect)
+      return yspec.render_split_inv_panel(player, 4, 4, { bg = "default" }, function (loc, rect)
         if loc == "main_body" then
           return fspec.label(rect.x + 1, rect.y, "Core") ..
             fspec.list("nodemeta:"..spos, "main", rect.x + 1, rect.y, 1, 1) ..

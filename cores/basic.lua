@@ -11,13 +11,13 @@ local state = {IDLE = 0, ACCOMPANY = 1}
 
 local function on_start(self)
   self.state = state.IDLE
-  self.object:setacceleration{x = 0, y = -10, z = 0}
-  self.object:setvelocity{x = 0, y = 0, z = 0}
+  self.object:set_acceleration{x = 0, y = -10, z = 0}
+  self.object:set_velocity{x = 0, y = 0, z = 0}
 end
 
 local function on_stop(self)
   self.state = nil
-  self.object:setvelocity{x = 0, y = 0, z = 0}
+  self.object:set_velocity{x = 0, y = 0, z = 0}
   self:set_animation(mod.ANIMATION_FRAMES.STAND)
 end
 
@@ -28,8 +28,8 @@ local function on_step(self, dtime)
     return
   end
 
-  local position = self.object:getpos()
-  local player_position = player:getpos()
+  local position = self.object:get_pos()
+  local player_position = player:get_pos()
   local direction = vector.subtract(player_position, position)
   local velocity = self.object:getvelocity()
 
@@ -37,14 +37,14 @@ local function on_step(self, dtime)
     if self.state == state.ACCOMPANY then
       self:set_animation(mod.ANIMATION_FRAMES.STAND)
       self.state = state.IDLE
-      self.object:setvelocity{x = 0, y = velocity.y, z = 0}
+      self.object:set_velocity{x = 0, y = velocity.y, z = 0}
     end
   else
     if self.state == state.IDLE then
       self:set_animation(mod.ANIMATION_FRAMES.WALK)
       self.state = state.ACCOMPANY
     end
-    self.object:setvelocity{x = direction.x, y = velocity.y, z = direction.z} -- TODO
+    self.object:set_velocity{x = direction.x, y = velocity.y, z = direction.z} -- TODO
   end
   self:set_yaw_by_direction(direction)
 
@@ -53,7 +53,7 @@ local function on_step(self, dtime)
     local front_node = self:get_front_node()
     if front_node.name ~= "air" and minetest.registered_nodes[front_node.name] ~= nil
     and minetest.registered_nodes[front_node.name].walkable then
-      self.object:setvelocity{x = direction.x, y = 5, z = direction.z}
+      self.object:set_velocity{x = direction.x, y = 5, z = direction.z}
     end
   end
 end

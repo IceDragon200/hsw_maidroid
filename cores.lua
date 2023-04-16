@@ -14,5 +14,5 @@ mod:require("cores/basic.lua")
 mod:require("cores/farming.lua")
 mod:require("cores/torcher.lua")
 if minetest.global_exists("pdisc") then
-  dofile(maidroid_core.modpath .. "/cores/ocr.lua")
+  mod:require("cores/ocr.lua")
 end

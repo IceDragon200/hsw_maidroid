@@ -9,29 +9,29 @@ local mod = assert(hsw_maidroid)
 
 local maidroid_instruction_set = {
   -- popular (similars in lua_api) information gathering functions
-  getpos = function(_, thread)
-    local pos = thread.droid.object:getpos()
+  get_pos = function(_, thread)
+    local pos = thread.droid.object:get_pos()
     return true, {pos.x, pos.y, pos.z}
   end,
 
-  getvelocity = function()
+  get_velocity = function()
     local vel = self.vel
     return true, {vel.x, vel.y, vel.z}
   end,
 
-  getacceleration = function(_, thread)
-    local acc = thread.droid.object:getacceleration()
+  get_acceleration = function(_, thread)
+    local acc = thread.droid.object:get_acceleration()
     return true, {acc.x, acc.y, acc.z}
   end,
 
-  getyaw = function(_, thread)
-    return true, thread.droid.object:getyaw()
+  get_yaw = function(_, thread)
+    return true, thread.droid.object:get_yaw()
   end,
 
   -- other info functions
 
   -- popular actions for changing sth
-  setyaw = function(params, thread)
+  set_yaw = function(params, thread)
     if #params ~= 1 then
       return false, "wrong number of arguments"
     end
@@ -39,7 +39,7 @@ local maidroid_instruction_set = {
     if type(p) ~= "number" then
       return false, "unsupported argument"
     end
-    thread.droid.object:setyaw(p)
+    thread.droid.object:set_yaw(p)
     return true
   end,
 
@@ -75,17 +75,18 @@ local maidroid_instruction_set = {
     end
 
     -- perform jump
-    droid.vel.y = math.sqrt(-2 * h * droid.object:getacceleration().y)
-    droid.object:setvelocity(droid.vel)
+    droid.vel.y = math.sqrt(-2 * h * droid.object:get_acceleration().y)
+    droid.object:set_velocity(droid.vel)
     return true, true
   end,
 
   beep = function(_, thread)
-    minetest.sound_play("maidroid_beep", {pos = thread.droid.object:getpos()})
+    minetest.sound_play("maidroid_beep", {
+      pos = thread.droid.object:get_pos()
+    })
     return true
   end,
 }
-
 
 local function mylog(log)
   -- This happens to the maidroids messages
@@ -159,7 +160,7 @@ local function on_stop(self)
 end
 
 -- register a definition of a new core.
-maidroid.register_core("maidroid_core:ocr", {
+mod.register_core(mod:make_name("core_ocr"), {
   description      = mod.S("Behaviour Core [OCR Programmable]"),
   inventory_image  = "maidroid_behaviour_core.ocr.png",
   on_start         = on_start,

@@ -7,9 +7,45 @@
 ------------------------------------------------------------
 local mod = assert(hsw_maidroid)
 
--- maidroid.animation_frames represents the animation frame data
--- of "models/maidroid.b3d".
+--- @namespace hsw_maidroid
+
+--- Represents the animation frame data of "models/maidroid.b3d".
+---
+--- @const ANIMATION_FRAMES: {
+---   [name: String]: { x: Integer, y: Integer },
+--- }
 mod.ANIMATION_FRAMES = {
+  --- Standing normally
+  STAND      = {x =   1, y =  19},
+  --- Standing and lifting something
+  STAND_LIFT = {x =  20, y =  24},
+  --- Standing while holding something with both arms
+  STAND_HOLD = {x =  25, y =  29},
+  --- Dropping something that was held
+  STAND_DROP = {x =  30, y =  34},
+  --- Standing (idling), it's the same as standing normally currently, so meh
+  STAND_IDLE = {x =  35, y =  70},
+  --- Sitting
+  SIT        = {x =  81, y =  89},
+  --- Sitting and lifting something
+  SIT_LIFT   = {x =  90, y =  94},
+  --- Sitting while holding something
+  SIT_HOLD   = {x =  95, y =  99},
+  --- Dropping that was held while sitting
+  SIT_DROP   = {x = 100, y = 104},
+  --- Laying down
+  LAY        = {x = 162, y = 165},
+  --- Walking
+  WALK       = {x = 168, y = 187},
+  --- Mining (while standing)
+  MINE       = {x = 189, y = 198},
+  --- Mining (while walking)
+  WALK_MINE  = {x = 200, y = 219},
+  --- Walking while holding something
+  WALK_HOLD  = {x = 230, y = 249},
+}
+
+mod.OLD_ANIMATION_FRAMES = {
   STAND     = {x =   1, y =  78},
   SIT       = {x =  81, y = 160},
   LAY       = {x = 162, y = 165},
@@ -25,10 +61,6 @@ mod.registered_maidroids = {}
 -- maidroid.registered_cores represents a table that contains
 -- definitions of core registered by maidroid.register_core.
 mod.registered_cores = {}
-
--- maidroid.registered_eggs represents a table that contains
--- definition of egg registered by maidroid.register_egg.
-mod.registered_eggs = {}
 
 --- Reports whether a item is a core item by the name.
 ---
@@ -122,12 +154,12 @@ end
 --- @spec #get_nearest_player(range_distance: Number): PlayerRef
 function mod.maidroid.get_nearest_player(self, range_distance)
   local player, min_distance = nil, range_distance
-  local position = self.object:getpos()
+  local position = self.object:get_pos()
 
   local all_objects = minetest.get_objects_inside_radius(position, range_distance)
   for _, object in pairs(all_objects) do
     if object:is_player() then
-      local player_position = object:getpos()
+      local player_position = object:get_pos()
       local distance = vector.distance(position, player_position)
 
       if distance < min_distance then
@@ -156,7 +188,7 @@ function mod.maidroid.get_front(self)
     direction.z = 0
   end
 
-  return vector.add(vector.round(self.object:getpos()), direction)
+  return vector.add(vector.round(self.object:get_pos()), direction)
 end
 
 -- maidroid.maidroid.get_front_node returns a node that exists in front of the maidroid.
@@ -168,7 +200,7 @@ end
 -- maidroid.maidroid.get_look_direction returns a normalized vector that is
 -- the maidroid's looking direction.
 function mod.maidroid.get_look_direction(self)
-  local yaw = self.object:getyaw()
+  local yaw = self.object:get_yaw()
   return vector.normalize{x = -math.sin(yaw), y = 0.0, z = math.cos(yaw)}
 end
 
@@ -196,6 +228,30 @@ function mod.maidroid.set_wield_item_stack(self, stack)
   inv:set_stack("wield_item", 1, stack)
 end
 
+-- maidroid.maidroid.get_head_item_stack returns the maidroid's head item's stack.
+function mod.maidroid.get_head_item_stack(self)
+  local inv = self:get_inventory()
+  return inv:get_stack("head_item", 1)
+end
+
+-- maidroid.maidroid.set_head_item_stack sets maidroid's head item stack.
+function mod.maidroid.set_head_item_stack(self, stack)
+  local inv = self:get_inventory()
+  inv:set_stack("head_item", 1, stack)
+end
+
+-- maidroid.maidroid.get_back_item_stack returns the maidroid's back item's stack.
+function mod.maidroid.get_back_item_stack(self)
+  local inv = self:get_inventory()
+  return inv:get_stack("back_item", 1)
+end
+
+-- maidroid.maidroid.set_back_item_stack sets maidroid's back item stack.
+function mod.maidroid.set_back_item_stack(self, stack)
+  local inv = self:get_inventory()
+  inv:set_stack("back_item", 1, stack)
+end
+
 -- maidroid.maidroid.add_item_to_main add item to main slot.
 -- and returns leftover.
 function mod.maidroid.add_item_to_main(self, stack)
@@ -221,9 +277,11 @@ function mod.maidroid.move_main_to_wield(self, pred)
   return false
 end
 
--- maidroid.maidroid.is_named reports the maidroid is still named.
+--- Determines if the maidroid has a name or not
+---
+--- @spec #is_named(): Boolean
 function mod.maidroid.is_named(self)
-  return self.nametag ~= ""
+  return self.nametag and self.nametag ~= ""
 end
 
 -- maidroid.maidroid.has_item_in_main reports whether the maidroid has item.
@@ -241,12 +299,12 @@ end
 
 -- maidroid.maidroid.change_direction change direction to destination and velocity vector.
 function mod.maidroid.change_direction(self, destination)
-  local position = self.object:getpos()
+  local position = self.object:get_pos()
   local direction = vector.subtract(destination, position)
   direction.y = 0
   local velocity = vector.multiply(vector.normalize(direction), 1.5)
 
-  self.object:setvelocity(velocity)
+  self.object:set_velocity(velocity)
   self:set_yaw_by_direction(direction)
 end
 
@@ -258,7 +316,7 @@ function mod.maidroid.change_direction_randomly(self)
     z = math.random(0, 5) * 2 - 5,
   }
   local velocity = vector.multiply(vector.normalize(direction), 1.5)
-  self.object:setvelocity(velocity)
+  self.object:set_velocity(velocity)
   self:set_yaw_by_direction(direction)
 end
 
@@ -279,67 +337,6 @@ function mod.maidroid.update_infotext(self)
   end
   infotext = infotext .. "[Owner] : " .. self.owner_name
   self.object:set_properties{infotext = infotext}
-end
-
--- register empty item entity definition.
--- this entity may be hold by maidroid's hands.
-do
-  mod:register_craftitem("dummy_empty_craftitem", {
-    wield_image = "maidroid_dummy_empty_craftitem.png",
-  })
-
-  local function on_activate(self, staticdata)
-    self.object:set_properties{
-      textures = {
-        mod:make_name("dummy_empty_craftitem")
-      }
-    }
-  end
-
-  local function on_step(self, dtime)
-    if self.maidroid_object then
-      local luaentity = self.maidroid_object:get_luaentity()
-      if luaentity then
-        local stack = luaentity:get_wield_item_stack()
-
-        if stack:get_name() ~= self.itemname then
-          if stack:is_empty() then
-            self.itemname = ""
-            self.object:set_properties{
-              textures = {
-                mod:make_name("dummy_empty_craftitem"),
-              }
-            }
-          else
-            self.itemname = stack:get_name()
-            self.object:set_properties{
-              textures = {
-                self.itemname
-              }
-            }
-          end
-        end
-        return
-      end
-    end
-
-    -- if cannot find maidroid, delete empty item.
-    self.object:remove()
-    return
-  end
-
-  minetest.register_entity(mod:make_name("dummy_item"), {
-    hp_max         = 1,
-    visual         = "wielditem",
-    visual_size    = {x = 0.025, y = 0.025},
-    collisionbox   = {0, 0, 0, 0, 0, 0},
-    physical       = false,
-    textures       = {"air"},
-    on_activate    = on_activate,
-    on_step        = on_step,
-    itemname       = "",
-    maidroid_object  = nil
-  })
 end
 
 ---------------------------------------------------------------------

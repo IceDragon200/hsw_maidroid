@@ -15,6 +15,8 @@ local is_player = assert(minetest.is_player)
 
 local product_name = mod:make_name("maidroid")
 
+local MODEL_NAME = "maidroid.b3d"
+
 -- create_inventory creates a new inventory, and returns it.
 local function create_inventory(self)
   self.inventory_name = product_name .. "_" .. tostring(self.manufacturing_number)
@@ -35,6 +37,10 @@ local function create_inventory(self)
         return stack:get_count()
       elseif listname == "core" and mod.is_core(stack:get_name()) then
         return stack:get_count()
+      elseif listname == "back_item" then
+        return 1
+      elseif listname == "head_item" then
+        return 1
       elseif listname == "wield_item" then
         return 0
       end
@@ -91,6 +97,8 @@ local function create_inventory(self)
   inventory:set_size("main", 16)
   inventory:set_size("core",  1)
   inventory:set_size("wield_item", 1)
+  inventory:set_size("back_item", 1)
+  inventory:set_size("head_item", 1)
 
   return inventory
 end
@@ -110,11 +118,19 @@ local function generate_texture(self)
 
   local skin_tone = mod.get_skin_tone(skin_tone_name) or mod.get_skin_tone("default")
 
+  local eyes
+
+  if self:get_core() then
+    eyes = "^maidroid_model.eyes."..eye_style_name..".png"
+  else
+    eyes = "^maidroid_model.eyes.closed.png"
+  end
+
   return ""
     .. "maidroid_model.skin."..skin_tone.name..".png"
     .. "^(maidroid_model.hair.base.png^[multiply:"..hair_color..")"
     .. "^maidroid_model.clothing."..clothing_style_name..".png"
-    .. "^maidroid_model.eyes."..eye_style_name..".png"
+    .. eyes
 end
 
 -- create_formspec_string returns a string that represents a formspec definition.
@@ -137,6 +153,14 @@ if foundation.is_module_present("yatm_core") then
       if loc == "main_body" then
         local model_w = 2
 
+        local animation
+
+        if self.pause then
+          animation = mod.ANIMATION_FRAMES.SIT
+        else
+          animation = mod.ANIMATION_FRAMES.WALK_MINE
+        end
+
         local formspec =
           fspec.tabheader(rect.x, rect.y, nil, nil, "tab", state.tabs, state.current_tab_index, false, true)
           .. fspec.box(
@@ -152,14 +176,14 @@ if foundation.is_module_present("yatm_core") then
             model_w,
             rect.h,
             "model",
-            "maidroid.b3d",
+            MODEL_NAME,
             texture,
             0,
             180,
             false,
             true,
-            200,
-            219,
+            animation.x,
+            animation.y,
             7.5
           )
 
@@ -172,6 +196,10 @@ if foundation.is_module_present("yatm_core") then
             .. fspec.list(inv_name, "core", rect.x + cio(model_w + 4.5), rect.y + cio(1.5), 1, 1)
             .. fspec.label(rect.x + cio(model_w + 5.5), rect.y + cio(1), "Wield")
             .. fspec.list(inv_name, "wield_item", rect.x + cio(model_w + 5.5), rect.y + cio(1.5), 1, 1)
+            .. fspec.label(rect.x + cio(model_w + 6.5), rect.y + cio(1), "Head")
+            .. fspec.list(inv_name, "head_item", rect.x + cio(model_w + 6.5), rect.y + cio(1.5), 1, 1)
+            .. fspec.label(rect.x + cio(model_w + 6.5), rect.y + cio(2), "Back")
+            .. fspec.list(inv_name, "back_item", rect.x + cio(model_w + 6.5), rect.y + cio(2.5), 1, 1)
         elseif state.current_tab_index == 2 then
           --- Appearance
           local x = rect.x + cio(model_w)
@@ -208,6 +236,10 @@ else
       .. fspec.list(inv_name, "core", rect.x + 4.5, rect.y + 1.5, 1, 1)
       .. fspec.label(rect.x + 5.5, rect.y + 1, "Wield")
       .. fspec.list(inv_name, "wield_item", rect.x + 5.5, rect.y + 1.5, 1, 1)
+      .. fspec.label(rect.x + 6.5, rect.y + 1, "Head")
+      .. fspec.list(inv_name, "head_item", rect.x + 6.5, rect.y + 1.5, 1, 1)
+      .. fspec.label(rect.x + 6.5, rect.y + 2, "Back")
+      .. fspec.list(inv_name, "back_item", rect.x + 6.5, rect.y + 2.5, 1, 1)
       .. fspec.list("current_player", "main", 0, 5, 8, 1)
       .. fspec.list("current_player", "main", 0, 6.2, 8, 3, 8)
   end
@@ -271,7 +303,7 @@ end
 -- on_activate is a callback function that is called when the object is created or recreated.
 local function on_activate(self, staticdata)
   -- parse the staticdata, and compose a inventory.
-  if staticdata == "" then
+  if not staticdata or staticdata == "" then
     self.manufacturing_number = mod.manufacturing_data[product_name]
     mod.manufacturing_data[product_name] = mod.manufacturing_data[product_name] + 1
     create_inventory(self)
@@ -280,6 +312,7 @@ local function on_activate(self, staticdata)
     -- if static data is not empty string, this object has beed already created.
     local data = minetest.deserialize(staticdata)
 
+    self.pause = data["pause"] or false
     self.manufacturing_number = data["manufacturing_number"]
     self.nametag = data["nametag"]
     self.owner_name = data["owner_name"]
@@ -301,25 +334,56 @@ local function on_activate(self, staticdata)
     text = self.nametag
   }
 
-  -- attach dummy item to new maidroid.
-  local dummy_item = minetest.add_entity(
+  -- attach dummy wield item to new maidroid.
+  local dummy_wield_item = minetest.add_entity(
     self.object:get_pos(),
     mod:make_name("dummy_item")
   )
-  dummy_item:set_attach(
+  dummy_wield_item:set_attach(
     self.object,
     "Arm_R",
     {x = 0.065, y = 0.50, z = -0.15},
     {x = -45, y = 0, z = 0}
   )
-  dummy_item:get_luaentity().maidroid_object = self.object
+  dummy_wield_item:get_luaentity().maidroid_object = self.object
+  dummy_wield_item:get_luaentity().slot_id = "wield_item"
+
+  local dummy_back_item = minetest.add_entity(
+    self.object:get_pos(),
+    mod:make_name("dummy_item")
+  )
+  dummy_back_item:set_attach(
+    self.object,
+    "Body",
+    {x = 0.0, y = 0.40, z = -4/16},
+    {x = 0, y = 0, z = 0}
+  )
+  dummy_back_item:get_luaentity().maidroid_object = self.object
+  dummy_back_item:get_luaentity().slot_id = "back_item"
+
+  local dummy_head_item = minetest.add_entity(
+    self.object:get_pos(),
+    mod:make_name("dummy_item")
+  )
+  dummy_head_item:set_attach(
+    self.object,
+    "Head",
+    {x = 0.0, y = 0.70, z = 0.0},
+    {x = 0, y = 0, z = 0}
+  )
+  dummy_head_item:get_luaentity().maidroid_object = self.object
+  dummy_head_item:get_luaentity().slot_id = "head_item"
 
   local core = self:get_core()
-  if core ~= nil then
-    core.on_start(self)
-  else
+  if core == nil then
     self.object:set_velocity{x = 0, y = 0, z = 0}
     self.object:set_acceleration{x = 0, y = -10, z = 0}
+  else
+    core.on_start(self)
+  end
+
+  if self.pause then
+    self:set_animation(mod.ANIMATION_FRAMES.SIT)
   end
 
   self:refresh_texture()
@@ -329,6 +393,8 @@ end
 local function get_staticdata(self)
   local inventory = self:get_inventory()
   local data = {
+    --- remember pause state
+    pause = self.pause,
     skin_tone_name = self.skin_tone_name,
     hair_color = self.hair_color,
     clothing_style_name = self.clothing_style_name,
@@ -405,6 +471,7 @@ local function on_punch(self, puncher, time_from_last_punch, tool_capabilities, 
     if core then
       core.on_pause(self)
     end
+    self:set_animation(mod.ANIMATION_FRAMES.SIT)
   end
 
   self:update_infotext()
@@ -420,7 +487,7 @@ minetest.register_entity(assert(product_name), {
   initial_properties = {
     hp_max = 20,
     weight = 10,
-    mesh = "maidroid.b3d",
+    mesh = MODEL_NAME,
     textures = {
       generate_default_texture(),
     },
@@ -465,6 +532,10 @@ minetest.register_entity(assert(product_name), {
   get_look_direction           = assert(mod.maidroid.get_look_direction),
   set_animation                = assert(mod.maidroid.set_animation),
   set_yaw_by_direction         = assert(mod.maidroid.set_yaw_by_direction),
+  get_back_item_stack          = assert(mod.maidroid.get_back_item_stack),
+  set_back_item_stack          = assert(mod.maidroid.set_back_item_stack),
+  get_head_item_stack          = assert(mod.maidroid.get_head_item_stack),
+  set_head_item_stack          = assert(mod.maidroid.set_head_item_stack),
   get_wield_item_stack         = assert(mod.maidroid.get_wield_item_stack),
   set_wield_item_stack         = assert(mod.maidroid.set_wield_item_stack),
   add_item_to_main             = assert(mod.maidroid.add_item_to_main),
