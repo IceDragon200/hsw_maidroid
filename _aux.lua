@@ -225,7 +225,9 @@ function mod._aux.register_writer(nodename, options)
       drawtype                       = "nodebox",
       paramtype                      = "light",
       paramtype2                     = "facedir",
-      groups                         = {cracky = 2},
+      groups                         = {
+        cracky = nokore.dig_class("copper"),
+      },
       is_ground_content              = false,
       sounds                         = sounds,
       node_box                       = node_box,
@@ -267,7 +269,10 @@ function mod._aux.register_writer(nodename, options)
       drawtype                       = "nodebox",
       paramtype                      = "light",
       paramtype2                     = "facedir",
-      groups                         = {cracky = 2},
+      groups                         = {
+        cracky = nokore.dig_class("copper"),
+        not_in_creative_inventory = 1,
+      },
       is_ground_content              = false,
       sounds                         = sounds,
       node_box                       = node_box,

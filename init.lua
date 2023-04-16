@@ -15,16 +15,15 @@ mod:require("api.lua")
 mod:require("_aux.lua")
 mod:require("nodes/core_writer.lua")
 mod:require("nodes/egg_writer.lua")
-mod:require("items/capture_rod.lua")
 mod:require("items/summon_core.lua")
 mod:require("items/nametag.lua")
+mod:require("entities/dummy_item.lua")
 mod:require("entities/maidroid.lua")
 mod:require("cores.lua")
 
-mod:require("register.lua")
-mod:require("recipes.lua")
-
 mod:require("hooks.lua")
+
+mod:require("compat.lua")
 
 if minetest.global_exists("yatm_codex") then
   mod:require("codex.lua")
