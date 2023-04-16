@@ -7,6 +7,7 @@
 ------------------------------------------------------------
 local mod = assert(hsw_maidroid)
 
+local Groups = assert(foundation.com.Groups)
 local fspec = assert(foundation.com.formspec.api)
 
 local yspec
@@ -69,7 +70,7 @@ mod:register_craftitem("nametag", {
   inventory_image  = "maidroid_tool_nametag.png",
   stack_max = 1,
 
-  on_use = function(itemstack, user, pointed_thing)
+  on_use = function(itemstack, player, pointed_thing)
     if pointed_thing.type ~= "object" then
       return nil
     end
@@ -80,7 +81,19 @@ mod:register_craftitem("nametag", {
     if not obj:is_player() and luaentity then
       local name = luaentity.name
 
-      if mod.is_maidroid(name) then
+      local is_nameable = false
+      if luaentity.is_nameable then
+        local ty = type(luaentity.is_nameable)
+        if ty == "boolean" then
+          is_nameable = luaentity.is_nameable
+        elseif ty == "function" then
+          is_nameable = luaentity:is_nameable(player, pointed_thing)
+        end
+      else
+        is_nameable = Groups.has_group(luaentity, "nameable")
+      end
+
+      if is_nameable then
         local nametag = luaentity.nametag or ""
 
         local assigns = {

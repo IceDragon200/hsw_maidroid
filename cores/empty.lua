@@ -8,11 +8,11 @@
 local mod = assert(hsw_maidroid)
 
 mod.register_core(mod:make_name("core_empty"), {
-	description      = "maidroid core : empty",
-	inventory_image  = "maidroid_core_empty.png",
-	on_start         = function(self) end,
-	on_stop          = function(self) end,
-	on_resume        = function(self) end,
-	on_pause         = function(self) end,
-	on_step          = function(self, dtime) end,
+  description      = mod.S("Behaviour Core [Empty]"),
+  inventory_image  = "maidroid_behaviour_core.default.png",
+  on_start         = function(self) end,
+  on_stop          = function(self) end,
+  on_resume        = function(self) end,
+  on_pause         = function(self) end,
+  on_step          = function(self, dtime) end,
 })
