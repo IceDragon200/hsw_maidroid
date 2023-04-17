@@ -452,9 +452,11 @@ local function on_step(self, dtime)
   pickup_item(self)
 
   -- do core method.
-  local core = self:get_core()
-  if (not self.pause) and core then
-    core.on_step(self, dtime)
+  if not self.pause then
+    local core = self:get_core()
+    if core then
+      core.on_step(self, dtime)
+    end
   end
 end
 
