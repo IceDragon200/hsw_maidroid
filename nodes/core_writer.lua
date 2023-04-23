@@ -15,14 +15,6 @@ if rawget(_G, "yatm_core") then
 end
 
 do -- register core writer
-
-  local dye_item_map = {
-    ["dye:red"]    = "maidroid_core:basic",
-    ["dye:yellow"] = "maidroid_core:farming",
-    ["dye:white"]  = "maidroid_core:ocr",
-    ["dye:orange"] = "maidroid_core:torcher"
-  }
-
   local node_box = {
     type = "fixed",
     fixed = {
@@ -42,35 +34,54 @@ do -- register core writer
     },
   }
 
-  local function render_formspec(pos, player, assigns)
+  local function render_formspec(pos, player, state)
     local spos = pos.x .. "," .. pos.y .. "," .. pos.z
 
-    local time = math.max(assigns.time, 0)
-    local arrow_percent = (100 / 40) * time
+    local cio = fspec.calc_inventory_offset
+    local inv_name =  "nodemeta:"..spos
+
+    local time = math.max(state.time, 0)
+    local time_max = math.max(state.time_max, 1)
+    local arrow_percent = 0
     local meter_percent = 0
-    if time % 16 >= 8 then
-      meter_percent = (8 - (time % 8)) * (100 / 8)
-    else
-      meter_percent = (time % 8) * (100 / 8)
+    if time_max > 0 then
+      arrow_percent = math.floor(100 * (1 - (time / time_max)))
+      meter_percent = (arrow_percent * 8) % 100
     end
 
     if yspec then
       return yspec.render_split_inv_panel(player, 4, 4, { bg = "default" }, function (loc, rect)
         if loc == "main_body" then
-          return fspec.label(rect.x + 1, rect.y, "Core") ..
-            fspec.list("nodemeta:"..spos, "main", rect.x + 1, rect.y, 1, 1) ..
-            fspec.label(rect.x, rect.y + 2, "Coal") ..
-            fspec.list("nodemeta:"..spos, "fuel", rect.x, rect.y + 2, 1, 1) ..
-            fspec.label(rect.x + 2, rect.y + 2, "Dye") ..
-            fspec.list("nodemeta:"..spos, "dye", rect.x + 2, rect.y + 2, 1, 1) ..
-            fspec.image(rect.x + 1, rect.y + 1, 1, 2,
+          -- fuel
+          -- core
+          -- material
+          -- processing
+          -- main
+          return ""
+            .. fspec.label(rect.x + 1, rect.y + 0.25, "Output")
+            .. fspec.list(inv_name, "main", rect.x + 1, rect.y + 0.5, 1, 1)
+            .. fspec.label(rect.x, rect.y + 2.25, "Fuel")
+            .. fspec.list(inv_name, "fuel", rect.x, rect.y + 2.5, 1, 1)
+            .. fspec.label(rect.x + 2, rect.y + 2.25, "Core")
+            .. fspec.list(inv_name, "core", rect.x + 2, rect.y + 2.5, 1, 1)
+            .. fspec.label(rect.x + cio(1) + 2, rect.y + 2.25, "Material")
+            .. fspec.list(inv_name, "material", rect.x + cio(1) + 2, rect.y + 2.5, 1, 1)
+            .. fspec.image(rect.x + 1, rect.y + 1.5, 1, 2,
               "maidroid_tool_gui_arrow.png^[lowpart:" .. arrow_percent .. ":maidroid_tool_gui_arrow_filled.png"
-            ) ..
-            fspec.image(rect.x + 1, rect.y + 3, 2, 1,
+            )
+            .. fspec.image(rect.x + 0.5, rect.y + 3.5, 2, 1,
               "maidroid_tool_gui_meter.png^[lowpart:" .. meter_percent .. ":maidroid_tool_gui_meter_filled.png^[transformR270"
             )
         elseif loc == "footer" then
           return ""
+            .. fspec.list_ring("current_player", "main")
+            .. fspec.list_ring(inv_name, "fuel")
+            .. fspec.list_ring("current_player", "main")
+            .. fspec.list_ring(inv_name, "core")
+            .. fspec.list_ring("current_player", "main")
+            .. fspec.list_ring(inv_name, "material")
+            .. fspec.list_ring("current_player", "main")
+            .. fspec.list_ring(inv_name, "main")
         end
         return ""
       end)
@@ -107,7 +118,7 @@ do -- register core writer
         "label[2.75,2;Coal]" ..
         "list[current_name;fuel;2.5,2.5;1,1;]" ..
         "label[4.75,2;Dye]" ..
-        "list[current_name;dye;4.5,2.5;1,1;]" ..
+        "list[current_name;material;4.5,2.5;1,1;]" ..
         "image[3.5,1.5;1,2;maidroid_tool_gui_arrow.png]" ..
         "image[3.1,3.5;2,1;maidroid_tool_gui_meter.png^[transformR270]" ..
         "list[current_player;main;0,5;8,1;]" ..
@@ -155,42 +166,24 @@ do -- register core writer
     },
   }
 
-  -- get_nearest_core_entity returns the nearest core entity.
-  local function get_nearest_core_entity(pos)
-    pos.y = pos.y + 0.65
-    local all_objects = minetest.get_objects_inside_radius(pos, 0.1)
-    for _, object in ipairs(all_objects) do
-      if object:get_luaentity().name == mod:make_name("core_entity") then
-        return object:get_luaentity()
-      end
-    end
-    return nil
-  end
-
   local function on_deactivate(pos)
-    local core_entity = get_nearest_core_entity(pos)
-    core_entity:stop_rotate()
+
   end
 
   local function on_activate(pos)
-    local core_entity = get_nearest_core_entity(pos)
-    core_entity:start_rotate()
+
   end
 
   local function on_metadata_inventory_put_to_main(pos)
-    local entity_position = {
-      x = pos.x, y = pos.y + 0.65, z = pos.z,
-    }
-    minetest.add_entity(entity_position, mod:make_name("core_entity"))
+
   end
 
   local function on_metadata_inventory_take_from_main(pos)
-    local core_entity = get_nearest_core_entity(pos)
-    core_entity.object:remove()
+
   end
 
   mod._aux.register_writer(mod:make_name("core_writer"), {
-    description                           = "maidroid tool : core writer",
+    description                           = mod.S("Maidroid Core Writer"),
     formspec                              = render_formspec,
     tiles                                 = tiles,
     node_box                              = node_box,
@@ -199,86 +192,8 @@ do -- register core writer
     on_activate                           = on_activate,
     on_deactivate                         = on_deactivate,
     empty_itemname                        = mod:make_name("core_empty"),
-    dye_item_map                          = dye_item_map,
+    recipe_registry                       = assert(mod.core_recipes),
     on_metadata_inventory_put_to_main     = on_metadata_inventory_put_to_main,
     on_metadata_inventory_take_from_main  = on_metadata_inventory_take_from_main,
-  })
-
-end
-
--- register a definition of a core entity.
-do
-  local node_box = {
-    type = "fixed",
-    fixed = {
-      {   -0.5,    -0.5,  -0.125,     0.5, -0.4375,   0.125},
-      { -0.125,    -0.5,    -0.5,   0.125, -0.4375,     0.5},
-      {  -0.25,    -0.5, -0.4375,    0.25, -0.4375,  0.4375},
-      { -0.375,    -0.5,  -0.375,   0.375, -0.4375,   0.375},
-      {-0.4375,    -0.5,   -0.25,  0.4375, -0.4375,    0.25},
-    },
-  }
-
-  local tiles = {
-    "maidroid_tool_core_top.png",
-    "maidroid_tool_core_top.png",
-    "maidroid_tool_core_right.png",
-    "maidroid_tool_core_right.png",
-    "maidroid_tool_core_right.png",
-    "maidroid_tool_core_right.png",
-  }
-
-  mod:register_node("core_node", {
-    drawtype    = "nodebox",
-    tiles       = tiles,
-    node_box    = node_box,
-    paramtype   = "light",
-    paramtype2  = "facedir",
-  })
-
-  local function on_activate(self, staticdata)
-    self.object:set_properties{
-      textures = {
-        mod:make_name("core_node")
-      }
-    }
-
-    if staticdata ~= "" then
-      local data = minetest.deserialize(staticdata)
-      self.is_rotating = data["is_rotating"]
-
-      if self.is_rotating then
-        self:start_rotate()
-      end
-    end
-  end
-
-  local function start_rotate(self)
-    self.object:set_properties{automatic_rotate = 1}
-    self.is_rotating = true
-  end
-
-  local function stop_rotate(self)
-    self.object:set_properties{automatic_rotate = 0}
-    self.is_rotating = false
-  end
-
-  local function get_staticdata(self)
-    local data = {
-      ["is_rotating"] = self.is_rotating,
-    }
-    return minetest.serialize(data)
-  end
-
-  minetest.register_entity(mod:make_name("core_entity"), {
-    physical        = false,
-    visual          = "wielditem",
-    visual_size     = {x = 0.5, y = 0.5},
-    collisionbox    = {0, 0, 0, 0, 0, 0},
-    on_activate     = on_activate,
-    start_rotate    = start_rotate,
-    stop_rotate     = stop_rotate,
-    get_staticdata  = get_staticdata,
-    is_rotating     = false,
   })
 end

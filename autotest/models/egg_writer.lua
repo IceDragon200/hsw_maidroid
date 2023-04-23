@@ -11,7 +11,7 @@ mod.autotest_suite:define_model("egg_writer", {
 
   properties = {
     {
-      property = "is_core_writer",
+      property = "is_egg_writer",
     },
   }
 })
