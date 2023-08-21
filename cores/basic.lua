@@ -31,7 +31,7 @@ local function on_step(self, dtime)
   local position = self.object:get_pos()
   local player_position = player:get_pos()
   local direction = vector.subtract(player_position, position)
-  local velocity = self.object:getvelocity()
+  local velocity = self.object:get_velocity()
 
   if vector.length(direction) < 3 then
     if self.state == state.ACCOMPANY then

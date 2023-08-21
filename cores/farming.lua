@@ -114,7 +114,7 @@ walk_randomly = function(self, dtime)
     self.time_counters[1] = self.time_counters[1] + 1
     self.time_counters[2] = self.time_counters[2] + 1
 
-    local velocity = self.object:getvelocity()
+    local velocity = self.object:get_velocity()
     if velocity.y == 0 then
       local front_node = self:get_front_node()
 
@@ -122,7 +122,7 @@ walk_randomly = function(self, dtime)
         self:change_direction_randomly()
       elseif front_node.name ~= "air" and minetest.registered_nodes[front_node.name] ~= nil
       and minetest.registered_nodes[front_node.name].walkable then
-        self.object:setvelocity{x = velocity.x, y = 6, z = velocity.z}
+        self.object:set_velocity{x = velocity.x, y = 6, z = velocity.z}
       end
     end
     return
@@ -228,7 +228,7 @@ walk_to_plant_and_mow_common = function(self, dtime)
 
   else
     -- if maidroid is stopped by obstacles, the maidroid must jump.
-    local velocity = self.object:getvelocity()
+    local velocity = self.object:get_velocity()
     if velocity.y == 0 then
       local front_node = self:get_front_node()
       if front_node.name ~= "air" and minetest.registered_nodes[front_node.name] ~= nil

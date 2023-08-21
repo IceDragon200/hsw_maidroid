@@ -139,7 +139,7 @@ local function on_step(self)
     return
   end
   self.vel_prev = self.vel
-  self.vel = self.object:getvelocity()
+  self.vel = self.object:get_velocity()
 
   thread:try_rebirth()
 end
