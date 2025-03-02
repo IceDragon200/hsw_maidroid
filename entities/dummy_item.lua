@@ -77,12 +77,12 @@ do
       collisionbox    = {0, 0, 0, 0, 0, 0},
       physical        = false,
       textures        = {"air"},
+      static_save     = false,
     },
     on_activate     = on_activate,
     on_step         = on_step,
     itemname        = "",
     maidroid_object = nil,
     -- the item is transient and will be reloaded by the maidroid as needed
-    static_save     = false,
   })
 end
