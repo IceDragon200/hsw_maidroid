@@ -186,9 +186,5 @@
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_nametag.png": {
-      "authors": ["tacigar"],
-      "licenses": ["CC-BY-SA 4.0"]
-    }
   }
 }
