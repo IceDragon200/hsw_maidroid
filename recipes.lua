@@ -16,13 +16,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_ignis",
   },
   output = {
-    name = mod:make_name("spirit_core_ignis"),
+    name = hsw_mobs:make_name("spirit_core_ignis"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })
@@ -32,13 +32,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_aqua",
   },
   output = {
-    name = mod:make_name("spirit_core_aqua"),
+    name = hsw_mobs:make_name("spirit_core_aqua"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })
@@ -48,13 +48,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_terra",
   },
   output = {
-    name = mod:make_name("spirit_core_terra"),
+    name = hsw_mobs:make_name("spirit_core_terra"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })
@@ -64,13 +64,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_ventus",
   },
   output = {
-    name = mod:make_name("spirit_core_ventus"),
+    name = hsw_mobs:make_name("spirit_core_ventus"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })
@@ -80,13 +80,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_umbra",
   },
   output = {
-    name = mod:make_name("spirit_core_umbra"),
+    name = hsw_mobs:make_name("spirit_core_umbra"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })
@@ -96,13 +96,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_lux",
   },
   output = {
-    name = mod:make_name("spirit_core_lux"),
+    name = hsw_mobs:make_name("spirit_core_lux"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })
@@ -112,13 +112,13 @@ mod.core_recipes:register_recipe(mod:make_name("spirit_core_default_to_spirit_co
 
   time = spirit_core_time,
   core = {
-    name = mod:make_name("spirit_core_default"),
+    name = hsw_mobs:make_name("spirit_core_default"),
   },
   material = {
     name = "harmonia_spirits:spirit_corrupted",
   },
   output = {
-    name = mod:make_name("spirit_core_corrupted"),
+    name = hsw_mobs:make_name("spirit_core_corrupted"),
   },
   on_crafted = mod.on_spirit_core_crafted,
 })

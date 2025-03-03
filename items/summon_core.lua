@@ -4,7 +4,7 @@
 ------------------------------------------------------------
 local mod = assert(hsw_maidroid)
 
-mod:register_tool("summon_core_empty", {
+mod:register_craftitem("summon_core_empty", {
   description = mod.S("Empty Maidroid Summoning Core"),
 
   inventory_image = "maidroid_summon_core_empty.png",
@@ -67,7 +67,7 @@ mod:register_tool("summon_core_empty", {
   end,
 })
 
-mod:register_tool("summon_core", {
+mod:register_craftitem("summon_core", {
   description = mod.S("Maidroid Summoning Core"),
   inventory_image = "maidroid_summon_core.png",
   stack_max = 1,
