@@ -4,6 +4,11 @@
       "urls": [
         "https://github.com/tacigar"
       ]
+    },
+    "IceDragon200": {
+      "urls": [
+        "https://github.com/IceDragon200"
+      ]
     }
   },
   "licenses": {
@@ -14,131 +19,188 @@
     }
   },
   "files": {
-    "textures/maidroid_core_basic.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_behaviour_core.basic.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_core_empty.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_behaviour_core.empty.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_core_farming.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_behaviour_core.farming.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_core_ocr.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_behaviour_core.ocr.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_core_torcher.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_behaviour_core.torcher.png": {
+      "authors": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_behaviour_core.transport.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
     "textures/maidroid_dummy_empty_craftitem.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_empty_egg.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_gui_swatch_border.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk10_egg.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_gui_swatch_button.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk11_egg.png": {
+    "textures/maidroid_model.clothing.victoria.black.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk12_egg.png": {
+    "textures/maidroid_model.clothing.victoria.navy_blue.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk13_egg.png": {
+    "textures/maidroid_model.eyes.closed.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk14_egg.png": {
-      "authors": ["tacigar"],
+    "textures/maidroid_model.eyes.dark.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk15_egg.png": {
+    "textures/maidroid_model.eyes.default.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk1_egg.png": {
+    "textures/maidroid_model.eyes.small_eyebrow.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk2_egg.png": {
+    "textures/maidroid_model.hair.base.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk3_egg.png": {
+    "textures/maidroid_model.skin.almond.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk4_egg.png": {
+    "textures/maidroid_model.skin.amber.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk5_egg.png": {
+    "textures/maidroid_model.skin.band.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk6_egg.png": {
+    "textures/maidroid_model.skin.base.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk7_egg.png": {
+    "textures/maidroid_model.skin.beige.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk8_egg.png": {
+    "textures/maidroid_model.skin.bronze.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_maidroid_mk9_egg.png": {
+    "textures/maidroid_model.skin.chocolate.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_capture_rod_mask_left.png": {
+    "textures/maidroid_model.skin.default.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_capture_rod_mask_right.png": {
+    "textures/maidroid_model.skin.espresso.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_capture_rod_plate.png": {
+    "textures/maidroid_model.skin.golden.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_capture_rod.png": {
+    "textures/maidroid_model.skin.gunmetal.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_capture_rod_star.png": {
+    "textures/maidroid_model.skin.honey.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_core_right.png": {
+    "textures/maidroid_model.skin.limestone.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_core_top.png": {
+    "textures/maidroid_model.skin.pale_ivory.png": {
       "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_model.skin.rose_beige.png": {
+      "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_model.skin.sand.png": {
+      "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_model.skin.sienna.png": {
+      "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_model.skin.umber.png": {
+      "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_model.skin.warm_ivory.png": {
+      "authors": ["tacigar"],
+      "modified_by": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_summon_core.png": {
+      "authors": ["IceDragon200"],
+      "licenses": ["CC-BY-SA 4.0"]
+    },
+    "textures/maidroid_summon_core_empty.png": {
+      "authors": ["IceDragon200"],
       "licenses": ["CC-BY-SA 4.0"]
     },
     "textures/maidroid_tool_core_writer_bottom.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_core_writer_front_active.png": {
+    "textures/maidroid_tool_core_writer_front.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_core_writer_front.png": {
+    "textures/maidroid_tool_core_writer_front_active.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
@@ -154,11 +216,11 @@
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_egg_writer_front_active.png": {
+    "textures/maidroid_tool_egg_writer_front.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_egg_writer_front.png": {
+    "textures/maidroid_tool_egg_writer_front_active.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
@@ -170,15 +232,11 @@
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_gui_arrow_filled.png": {
-      "authors": ["tacigar"],
-      "licenses": ["CC-BY-SA 4.0"]
-    },
     "textures/maidroid_tool_gui_arrow.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
-    "textures/maidroid_tool_gui_meter_filled.png": {
+    "textures/maidroid_tool_gui_arrow_filled.png": {
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
@@ -186,5 +244,9 @@
       "authors": ["tacigar"],
       "licenses": ["CC-BY-SA 4.0"]
     },
+    "textures/maidroid_tool_gui_meter_filled.png": {
+      "authors": ["tacigar"],
+      "licenses": ["CC-BY-SA 4.0"]
+    }
   }
 }
